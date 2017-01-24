@@ -1,44 +1,83 @@
 package org.usfirst.frc.team4050;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import org.usfirst.frc.team4050.commands.autoAlt1;
+import org.usfirst.frc.team4050.subsystems.Drivetrain;
 
 /**
- * Created by Carson on 1/23/2017.
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the IterativeRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the manifest file in the resource
+ * directory.
  */
 public class Robot extends IterativeRobot {
 
-    @Override
+    Command autonomousCommand;
+
+    public static OI oi;
+    public static Drivetrain drivetrain;
+
+
+
+    /**
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
     public void robotInit() {
-        super.robotInit();
+        RobotMap.init();
+        drivetrain = new Drivetrain();
+
+        oi = new OI();
+        autonomousCommand = new autoAlt1();
     }
 
-    @Override
-    public void disabledInit() {
-        super.disabledInit();
+    /**
+     * This function is called when the disabled button is hit.
+     * You can use it to reset subsystems before shutting down.
+     */
+    public void disabledInit(){
+
     }
 
-    @Override
-    public void autonomousInit() {
-        super.autonomousInit();
-    }
-
-    @Override
-    public void teleopInit() {
-        super.teleopInit();
-    }
-
-    @Override
     public void disabledPeriodic() {
-        super.disabledPeriodic();
+        Scheduler.getInstance().run();
     }
 
-    @Override
+    public void autonomousInit() {
+        // schedule the autonomous command (example)
+        if (autonomousCommand != null) autonomousCommand.start();
+    }
+
+    /**
+     * This function is called periodically during autonomous
+     */
     public void autonomousPeriodic() {
-        super.autonomousPeriodic();
+        Scheduler.getInstance().run();
     }
 
-    @Override
+    public void teleopInit() {
+        // This makes sure that the autonomous stops running when
+        // teleop starts running. If you want the autonomous to
+        // continue until interrupted by another command, remove
+        // this line or comment it out.
+        if (autonomousCommand != null) autonomousCommand.cancel();
+    }
+
+    /**
+     * This function is called periodically during operator control
+     */
     public void teleopPeriodic() {
-        super.teleopPeriodic();
+        Scheduler.getInstance().run();
+    }
+
+    /**
+     * This function is called periodically during test mode
+     */
+    public void testPeriodic() {
+        LiveWindow.run();
     }
 }
